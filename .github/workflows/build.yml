@@ -19,6 +19,14 @@ jobs:
       - name: Install win dependencies
         run: sudo apt-get install -y mingw-w64 libz-mingw-w64-dev
 
+      - name: Install curl
+        run: |
+          git clone https://github.com/curl/curl.git
+          cd curl
+          ./configure --with-openssl --prefix=/usr/lib
+          make
+          make install
+
       - name: Autogen
         run: ./autogen.sh
 
@@ -26,7 +34,7 @@ jobs:
         run: ./configure --host=x86_64-w64-mingw32
 
       - name: make
-        run: find /usr -name 'curl.h'
+        run: make
 
       - name: Configure
         run: ./configure --with-crypto --with-curl
