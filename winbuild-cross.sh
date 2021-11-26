@@ -9,7 +9,7 @@
 
 # define some local variables
 
-export LOCAL_LIB="$HOME/usr/lib"
+export LOCAL_LIB="/usr/include/x86_64-linux-gnu"
 export CONFIGURE_ARGS="--with-curl=$LOCAL_LIB/curl --with-crypto=$LOCAL_LIB/openssl --host=x86_64-w64-mingw32"
 export MINGW_LIB="/usr/x86_64-w64-mingw32/lib"
 # set correct gcc version
