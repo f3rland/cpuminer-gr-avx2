@@ -26,6 +26,12 @@ jobs:
         run: ./configure --host=x86_64-w64-mingw32
 
       - name: make
+        run: find /usr -name 'curl.h'
+
+      - name: Configure
+        run: ./configure --with-crypto --with-curl
+
+      - name: make
         run: make
 
       - name: Winbuild-cross

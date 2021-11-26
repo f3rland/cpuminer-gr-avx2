@@ -8,6 +8,8 @@
 # into a release folder ready to be zipped and uploaded.
 
 # define some local variables
+# Provide some help for CI to find curl
+export PATH="/usr/include/x86_64-linux-gnu:$PATH"
 
 export LOCAL_LIB="/usr/include/x86_64-linux-gnu"
 export CONFIGURE_ARGS="--with-curl=$LOCAL_LIB/curl --with-crypto=$LOCAL_LIB/openssl --host=x86_64-w64-mingw32"
