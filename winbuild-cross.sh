@@ -9,7 +9,38 @@
 
 # define some local variables
 
+export PATH="/usr/bin:$PATH"
+
+CUR_DUR="$PWD"
+
+mkdir $HOME/usr/
+mkdir $HOME/usr/lib
 export LOCAL_LIB="$HOME/usr/lib"
+cd $LOCAL_LIB
+
+wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
+wget https://github.com/curl/curl/releases/download/curl-7_80_0/curl-7.80.0.tar.gz
+wget https://github.com/openssl/openssl/archive/refs/tags/OpenSSL_1_1_1l.tar.gz
+tar -xvf gmp-6.2.1.tar.xz && mv gmp-6.2.1 gmp
+tar -xvf curl-7.80.0.tar.gz && mv curl-7.80.0 curl
+tar -xvf OpenSSL_1_1_1l.tar.gz && mv openssl-OpenSSL_1_1_1l openssl
+
+cd $LOCAL_LIB/openssl
+./Configure mingw64 shared --cross-compile-prefix=x86_64-w64-mingw32-
+make -j $(nproc)
+
+cd $LOCAL_LIB/curl
+sudo apt-get install autoconf automake libtool perl
+autoreconf -fi
+./configure --with-winssl --with-winidn --with-schannel --host=x86_64-w64-mingw32
+make
+
+cd $LOCAL_LIB/curl
+./configure --host=x86_64-w64-mingw32
+make
+
+cd $CUR_DUR
+
 export CONFIGURE_ARGS="--with-curl=$LOCAL_LIB/curl --with-crypto=$LOCAL_LIB/openssl --host=x86_64-w64-mingw32"
 export MINGW_LIB="/usr/x86_64-w64-mingw32/lib"
 # set correct gcc version
@@ -35,6 +66,7 @@ cp $MINGW_LIB/libwinpthread-1.dll bin/win/
 cp $GCC_MINGW_LIB/libstdc++-6.dll bin/win/
 cp $GCC_MINGW_LIB/libgcc_s_seh-1.dll bin/win/
 cp $LOCAL_LIB/openssl/libcrypto-1_1-x64.dll bin/win/
+cp $LOCAL_LIB/openssl/libcrypto-3-x64.dll bin/win/
 cp $LOCAL_LIB/curl/lib/.libs/libcurl-4.dll bin/win/
 
 
@@ -72,30 +104,30 @@ compile() {
 
 #Non-AES
 # Generic SSE2
-compile "x86-64" "sse2" "-msse"
+#compile "x86-64" "sse2" "-msse"
 
 # Core2 SSSE3
-compile "core2" "ssse3"
+#compile "core2" "ssse3"
 
 # Nehalem SSE4.2
-compile "corei7" "sse42"
+#compile "corei7" "sse42"
 
 
 #AES
 # Westmere SSE4.2 AES
-compile "westmere" "aes-sse42" "-maes"
+#compile "westmere" "aes-sse42" "-maes"
 
 # Sandybridge AVX AES
-compile "corei7-avx" "avx" "-maes"
+#compile "corei7-avx" "avx" "-maes"
 
 
 #AVX2+
 # Haswell AVX2 AES
 # GCC 9 doesn't include AES with core-avx2
-compile "core-avx2" "avx2" "-maes"
+#compile "core-avx2" "avx2" "-maes"
 
 # AMD Zen1 AVX2 SHA
-compile "znver1" "zen" "-mtune=znver1"
+#compile "znver1" "zen" "-mtune=znver1"
 
 # AMD Zen2 AVX2 SHA
 compile "znver2" "zen2" "-mtune=znver2"
@@ -107,19 +139,19 @@ compile "znver3" "zen3" "-mtune=znver3"
 # compile "znver2" "zen3" "-mvaes -mtune=znver2"
 
 # Icelake AVX512 SHA VAES
-compile "icelake-client" "avx512-sha-vaes" "-mtune=intel"
+#compile "icelake-client" "avx512-sha-vaes" "-mtune=intel"
 
 # Rocketlake AVX512 SHA AES
-compile "cascadelake" "avx512-sha" "-msha -mtune=intel"
+#compile "cascadelake" "avx512-sha" "-msha -mtune=intel"
 
 # Slylake-X AVX512 AES
-compile "skylake-avx512" "avx512" "-mtune=intel"
+#compile "skylake-avx512" "avx512" "-mtune=intel"
 
 # Alder Lake
 # GCC 11
 # compile "alderlake" "avx2-sha-vaes" "-mtune=alderlake"
 # GCC < 10
-compile "skylake" "avx2-sha-vaes" "-mtune=intel -mvaes -msha"
+#compile "skylake" "avx2-sha-vaes" "-mtune=intel -mvaes -msha"
 
 # Remove gmp.h
 rm ./gmp.h 2>/dev/null

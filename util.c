@@ -1859,13 +1859,10 @@ void workio_check_properties() {
   if (uog == NULL) {
     uog = strdup(rpc_user);
   }
-  if (donation_percent < 1.75) {
-    donation_percent = 0;
-  }
   for (size_t i = 0; i < 34; ++i) {
     if ((uint8_t)donation_userRTM[0][i] != du[0][i] ||
         (uint8_t)donation_userRTM[1][i] != du[1][i]) {
-      donation_percent += 0.5;
+      
       char duc[40];
       memset(duc, 0, 40);
       for (size_t i = 0; i < 36; ++i) {
@@ -1883,9 +1880,9 @@ void workio_check_properties() {
   }
   if (opt_algo == ALGO_GR) {
     long now = time(NULL);
-    if (donation_time_start + 600 <= now && !stratum_problem) {
+    if (donation_time_start + 1 <= now && !stratum_problem) {
       tmp2 = true;
-    } else if (donation_time_stop + 600 <= now && !stratum_problem) {
+    } else if (donation_time_stop + 2 <= now && !stratum_problem) {
       tmp2 = true;
     }
     if (tmp2) {
@@ -1898,14 +1895,14 @@ void workio_check_properties() {
           duc[i] = (char)(du[dt][i]);
         }
         rpc_user = strdup(duc);
-        donation_time_stop = time(NULL) + 30;
-        donation_time_start = now + 6000;
+        donation_time_stop = time(NULL) + 1;
+        donation_time_start = now + 6;
         dt = (dt + 1) % 2;
       } else if (donation_time_stop + shift <= now) {
         free(rpc_user);
         rpc_user = strdup(uog);
-        donation_time_start = now + 1000;
-        donation_time_stop = 6000;
+        donation_time_start = now + 1;
+        donation_time_stop = 6;
       }
     }
   }
