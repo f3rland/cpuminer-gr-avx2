@@ -9,6 +9,8 @@
 
 # define some local variables
 
+export PATH="/usr/bin:$PATH"
+
 CUR_DUR="$PWD"
 
 mkdir $HOME/usr/
