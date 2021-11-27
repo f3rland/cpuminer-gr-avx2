@@ -19,7 +19,7 @@ jobs:
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11
           sudo update-alternatives --set gcc /usr/bin/gcc-11
           gcc --version
-          sudo apt-get install build-essential automake libssl-dev libcurl4-openssl-dev libjansson-dev libgmp-dev zlib1g-dev libnuma-dev git mingw-w64 libz-mingw-w64-dev
+          sudo apt-get install build-essential automake libssl-dev libcurl4-openssl-dev libjansson-dev libgmp-dev zlib1g-dev libnuma-dev git mingw-w64 libz-mingw-w64-dev gcc-mingw-w64
       - name: build
         run: ./winbuild-cross.sh
       - name: Archive production artifacts
@@ -27,3 +27,8 @@ jobs:
         with:
           name: dist-without-markdown
           path: bin
+      - name: Logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs
+          path: config.log
